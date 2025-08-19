@@ -1,0 +1,592 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fineed — Find your dream job</title>
+  <meta name="description" content="A clean, modern landing page inspired by the Fineed mobile UI. Fully responsive, with professional micro‑interactions and scroll animations." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --primary: #C6F53E;            /* Fineed neon-lime */
+      --primary-600: #B2E62E;
+      --bg: #ECF3EA;                 /* pale greenish background */
+      --card: #ffffff;               /* surfaces */
+      --ink: #0B0F14;                /* heading text */
+      --muted: #6B7280;              /* muted text */
+      --ring: rgba(12, 18, 25, .08); /* soft borders */
+      --shadow: 0 10px 30px rgba(0,0,0,.06), 0 2px 8px rgba(0,0,0,.04);
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --radius-sm: 10px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      color:var(--ink); background:
+        radial-gradient(1200px 600px at 80% -10%, rgba(198,245,62,.25), transparent 60%),
+        linear-gradient(180deg, #F6FBF4 0%, var(--bg) 100%);
+      overflow-x:hidden;
+    }
+
+    a{color:inherit; text-decoration:none}
+    img{max-width:100%; display:block}
+    button{font:inherit}
+
+    /* ====== Utility ====== */
+    .container{width:min(1100px, 94vw); margin-inline:auto}
+    .stack{display:flex; gap:clamp(16px, 2.5vw, 28px)}
+    .grid{display:grid; gap:clamp(14px, 2vw, 24px)}
+    .shadow{box-shadow:var(--shadow)}
+    .pill{border-radius:999px}
+    .card{background:var(--card); border:1px solid var(--ring); border-radius:var(--radius-lg)}
+    .muted{color:var(--muted)}
+    .hidden-visually{position:absolute!important; height:1px; width:1px; overflow:hidden; clip:rect(1px,1px,1px,1px)}
+
+    /* ====== Header ====== */
+    header{
+      position:sticky; top:0; z-index:50; backdrop-filter:saturate(180%) blur(10px);
+      background:rgba(250, 252, 248, .7); border-bottom:1px solid var(--ring)
+    }
+    .nav{display:flex; align-items:center; justify-content:space-between; padding:14px 0}
+    .brand{display:flex; align-items:center; gap:10px; font-weight:700; letter-spacing:.2px}
+    .logo{display:grid; place-items:center; width:36px; height:36px; border-radius:12px; background:var(--ink); color:var(--primary); font-weight:800}
+    .navlinks{display:flex; gap:18px; align-items:center}
+    .navlinks a{padding:10px 12px; border-radius:10px}
+    .navlinks a:hover {color: white; background: #588157; box-shadow: 0px 4px 10px rgba(63, 63, 63, 0.3);  transform: translateY(-2px); }
+.navlinks a:active {
+  transform: translateY(1px);
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+
+    .cta{
+      background:var(--ink); color:white; padding:10px 16px; border:none; border-radius:14px; cursor:pointer;
+      transition:transform .18s ease, box-shadow .18s ease, background .2s ease
+    }
+    .cta:hover{transform:translateY(-1px); box-shadow:0 10px 18px rgba(0,0,0,.12)}
+    .cta--ghost{background:transparent; color:var(--ink); border:1px solid var(--ring)}
+
+    /* ====== Hero ====== */
+    .hero{padding:clamp(38px, 6vw, 72px) 0 24px; position:relative; isolation:isolate}
+    .hero .content{display:grid; grid-template-columns: 1.05fr .95fr; align-items:center; gap:clamp(22px, 4vw, 48px)}
+
+    .kicker{display:inline-flex; align-items:center; gap:10px; padding:8px 12px; border-radius:999px; background:#f7faf5; border:1px solid var(--ring)}
+    .kicker i{width:8px; height:8px; background:var(--primary); border-radius:50%}
+
+    .title{font-size:clamp(30px, 6vw, 54px); line-height:1.06; letter-spacing:-.02em; margin:10px 0 14px}
+    .subtitle{font-size:clamp(15px, 2.2vw, 18px); color:var(--muted); max-width:50ch}
+
+    .hero-actions{display:flex; gap:12px; margin:18px 0 10px}
+    .btn{box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3);display:inline-flex; align-items:center; gap:10px; padding:12px 16px; border-radius:14px; border:1px solid var(--ring); background:white; cursor:pointer}
+    .btn .dot{width:8px; height:8px; border-radius:50%; background:var(--primary)}
+    .btn.primary{box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3);background:var(--primary); border-color:transparent}
+    .btn:hover {  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.5);transform: translateY(-2px);}
+    .btn:active {box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);transform: translateY(1px);}
+
+
+    .hero-meta{display:flex; gap:18px; align-items:center; margin-top:14px}
+    .avatar{width:24px; height:24px; border-radius:50%; background:linear-gradient(135deg, #ffcc70, #ff8177)}
+
+    /* Phone mock */
+    .phone-wrap{position:relative; display:grid; place-items:center}
+    .orb{position:absolute; inset:auto -20% -20% auto; width:min(600px, 55vw); aspect-ratio:1; filter:blur(40px); opacity:.35;
+      background:radial-gradient(circle at 35% 40%, var(--primary), transparent 50%),
+                 radial-gradient(circle at 65% 60%, #86efac, transparent 50%);
+      z-index:-1; animation:float 8s ease-in-out infinite alternate}
+
+    .phone{width:min(340px, 84%); border-radius:34px; padding:14px; background:#0a0e12; box-shadow:0 30px 70px rgba(0,0,0,.25); position:relative}
+    .island{position:absolute; top:10px; left:50%; translate:-50% 0; height:26px; width:110px; background:#0a0e12; border-radius:14px}
+    .screen{border-radius:26px; overflow:hidden; background:white}
+
+    .slides{position:relative; height:620px}
+    .slide{position:absolute; inset:0; padding:18px; display:flex; flex-direction:column; justify-content:space-between; transform:translateX(100%); opacity:0; transition:transform .7s cubic-bezier(.2,.7,0,.98), opacity .6s ease}
+    .slide.active{transform:translateX(0); opacity:1}
+    .wrapper {
+  display: flex;
+  justify-content:left;
+  align-items:center;
+  height: 9vh;
+  
+}
+
+.content {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: rgb(8, 12, 0);
+  display: flex;
+  align-items: center;
+}
+
+.content p {
+  margin-right: 15px;
+}
+
+.content ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  height: 50px; /* matches line-height */
+  overflow: hidden;
+}
+
+.content ol li {
+  height: 50px;
+  -webkit-text-fill-color: transparent;
+  background: linear-gradient(20deg,#d9ed92,#76c893,#1e6091,#184e77);
+  -webkit-background-clip: text;
+  line-height: 50px; /* ensures no overflow */
+  animation: slide-up 8s infinite;
+}
+
+@keyframes slide-up {
+  0%, 20% { transform: translateY(0); }
+  25%, 45% { transform: translateY(-50px); }
+  50%, 70% { transform: translateY(-100px); }
+  75%, 95% { transform: translateY(-150px); }
+  100% { transform: translateY(0); }
+}
+
+    /* Slide styles mimicking Fineed screens */
+    .s1{background:var(--primary); display:grid; place-items:center; color:#0c0f14}
+    .s1 h2{font-size:42px; letter-spacing:.5px}
+
+    .s2{background:#ffffff}
+    .s2-hero{display:flex; align-items:center; gap:14px}
+    .illus{width:68px; height:68px; border-radius:16px; background:
+      conic-gradient(from 90deg, #111 0 25%, var(--primary) 0 50%, #a7f3d0 0 75%, #111 0 100%)}
+    .s2 h3{font-size:22px; margin:0}
+    .s2 .cta-row{display:flex; gap:10px}
+
+    .s3{background:#f9fafb}
+    .job{padding:12px; background:white; border:1px solid #edf1ee; border-radius:16px; display:flex; align-items:center; justify-content:space-between}
+    .job .logo{width:38px; height:38px; border-radius:12px; font-size:12px}
+    .tag{font-size:12px; padding:6px 10px; border-radius:999px; background:#f2f4f7; color:#111}
+
+    .dots{display:flex; gap:8px; justify-content:center; margin-top:12px}
+    .dots button{width:8px; height:8px; border-radius:50%; border:none; background:#d1d5db; cursor:pointer}
+    .dots button[aria-current="true"]{background:var(--ink)}
+
+    /* ====== Features ====== */
+    .features{padding:clamp(36px, 7vw, 86px) 0}
+    .features .grid{grid-template-columns:repeat(4, 1fr)}
+    .feature{padding:20px;box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.4); border-radius:var(--radius-lg); background:white; border:1px solid var(--ring)}
+    .icon{width:38px; height:38px; border-radius:12px; display:grid; place-items:center; background:var(--ink); color:var(--primary)}
+    .feature h4{margin:12px 0 6px}
+
+    /* ====== How it works ====== */
+    .how{padding:clamp(24px, 6vw, 80px) 0}
+    .steps{grid-template-columns:repeat(3, 1fr)}
+    .step{box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);padding:24px; background:white; border:1px solid var(--ring); border-radius:var(--radius-lg)}
+    .step .num{font-weight:800; font-size:28px; background:var(--primary); border-radius:12px; padding:8px 12px; display:inline-block}
+
+    /* ====== Social proof / Testimonial ====== */
+    .testimonial{padding:clamp(24px, 6vw, 80px) 0}
+    .test-card{display:grid; grid-template-columns: 120px 1fr; gap:18px; padding:24px; background:white; border:1px solid var(--ring); border-radius:var(--radius-lg)}
+    .pfp{width:100%; aspect-ratio:1; border-radius:20px; background:radial-gradient(circle at 30% 30%, #ff8a00, #e52e71)}
+
+    /* ====== CTA ====== */
+    .cta-wrap{padding:clamp(24px, 6vw, 80px) 0}
+    .cta-card{padding:28px; border-radius:var(--radius-xl); border:1px solid var(--ring); background:linear-gradient(180deg, #ffffff 0, #fbfdf7 100%)}
+
+    /* ====== Footer ====== */
+    footer{padding:30px 0 70px; color:#475569}
+
+    /* ====== Animations ====== */
+    @keyframes float{to{transform:translateY(10px)}}
+    @keyframes rise{from{opacity:0; transform:translateY(14px)} to{opacity:1; transform:none}}
+    .reveal{opacity:0; transform:translateY(16px)}
+    .reveal.in{opacity:1; transform:none; transition:opacity .7s ease, transform .7s ease}
+
+    /* ====== Responsive ====== */
+    @media (max-width: 980px){
+      .hero .content{grid-template-columns:1fr}
+      .phone{width:min(420px, 94vw)}
+      .features .grid{grid-template-columns:1fr 1fr}
+      .steps{grid-template-columns:1fr}
+    }
+    @media (max-width: 560px){
+      .navlinks{display:none}
+      .features .grid{grid-template-columns:1fr}
+    }
+
+    /* Reduced motion preference */
+    @media (prefers-reduced-motion: reduce){
+      .orb{animation:none}
+      .slide{transition:none}
+      .reveal{transition:none}
+    }
+  </style>
+</head>
+<body>
+  <!-- ====== Header / Nav ====== -->
+  <header>
+    <div class="container nav">
+      <a class="brand" href="#">
+        <span class="logo">F</span>
+        <span>Fineed</span>
+      </a>
+      <nav class="navlinks" aria-label="Primary">
+        <a href="#features">Features</a>
+        <a href="#how">How it works</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+      <div class="stack">
+        <button class="cta cta--ghost" onclick="document.getElementById('signin').showModal()">Sign in</button>
+        <button class="cta">Get the App</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ====== Hero ====== -->
+  <section class="hero">
+    <div class="container content">
+      <div>
+        <div class="kicker"><i></i><span>High Fidelity Design</span></div>
+        <h1 class="title">Find your <span style="background:linear-gradient(90deg,var(--ink),#334155); -webkit-background-clip:text; color:transparent">dream job</span> in a few taps</h1>
+        <p class="subtitle">Fineed matches you with roles you'll love. Quick profile, curated recommendations, and one-tap apply from your phone.</p>
+        <div class="hero-actions">
+          <button class="btn primary" onclick="document.getElementById('signup').showModal()"><span class="dot"></span> Get started</button>
+          <button class="btn" onclick="document.getElementById('signin').showModal()">Sign in</button>
+        </div>
+        <div class="hero-meta">
+          <span class="avatar"></span>
+          <span class="muted">4,000+ jobs • 120+ companies • 98% satisfaction</span>
+        </div>
+      </div>
+      <div class="phone-wrap">
+        <div class="orb" aria-hidden="true"></div>
+        <div class="phone" role="img" aria-label="App preview on a phone mockup">
+          <div class="island" aria-hidden="true"></div>
+          <div class="screen">
+            <div class="slides" id="slides" style="background:#fff">
+              <!-- Slide 1: Lime splash with brand -->
+              <article class="slide s1 active" aria-roledescription="slide">
+                <h2>Fineed</h2>
+              </article>
+
+              <!-- Slide 2: Onboarding card -->
+              <article class="slide s2" aria-roledescription="slide">
+                <div class="s2-hero">
+                  <div class="illus" aria-hidden="true"></div>
+                  <div>
+                    <h3>Find your dream job now here</h3>
+                    <p class="muted" style="margin:.3rem 0 0">Tailored roles, curated daily.</p>
+                  </div>
+                </div>
+                <div class="grid" style="gap:12px">
+                  <div class="card" style="padding:14px">
+                    <div class="stack" style="justify-content:space-between">
+                      <div class="stack" style="align-items:center">
+                        <span class="logo" style="width:34px;height:34px">UX</span>
+                        <div>
+                          <div style="font-weight:600">UI/UX Designer</div>
+                          <div class="muted" style="font-size:12px">Full‑time • Remote</div>
+                        </div>
+                      </div>
+                      <span class="tag">₹12 to 18 LPA</span>
+                    </div>
+                  </div>
+                  <div class="card" style="padding:14px">
+                    <div class="stack" style="justify-content:space-between">
+                      <div class="stack" style="align-items:center">
+                        <span class="logo" style="width:34px;height:34px;background:#111;color:#fff">FE</span>
+                        <div>
+                          <div style="font-weight:600">Front-end Engineer</div>
+                          <div class="muted" style="font-size:12px">Hybrid • Pune</div>
+                        </div>
+                      </div>
+                      <span class="tag">₹18-28 LPA</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="s2 footer" style="display:flex; justify-content:space-between; align-items:center">
+                  <div class="stack">
+                    <button class="btn" style="padding:8px 12px"><span class="dot"></span> Skip</button>
+                  </div>
+                  <button class="btn primary" style="padding:10px 14px">Continue</button>
+                </div>
+              </article>
+
+              <!-- Slide 3: Feed / Recently posted -->
+              <article class="slide s3" aria-roledescription="slide">
+                <div class="stack" style="align-items:center; justify-content:space-between">
+                  <h3 style="margin:0">Recommended</h3>
+                  <button class="btn" style="padding:8px 12px">Search</button>
+                </div>
+                <div class="grid" style="margin-top:8px">
+                  <div class="job">
+                    <div class="stack" style="align-items:center">
+                      <span class="logo">PM</span>
+                      <div>
+                        <div style="font-weight:600">Product Manager</div>
+                        <div class="muted" style="font-size:12px">Bengaluru • 3+ yrs</div>
+                      </div>
+                    </div>
+                    <button class="btn" style="padding:8px 12px; background:var(--primary)">Apply</button>
+                  </div>
+                  <div class="job">
+                    <div class="stack" style="align-items:center">
+                      <span class="logo" style="background:#0b0f14;color:white">DS</span>
+                      <div>
+                        <div style="font-weight:600">Data Scientist</div>
+                        <div class="muted" style="font-size:12px">Remote • 2+ yrs</div>
+                      </div>
+                    </div>
+                    <button class="btn" style="padding:8px 12px">Save</button>
+                  </div>
+                </div>
+              </article>
+            </div>
+            <div class="dots" role="tablist" aria-label="Slides">
+              <button aria-current="true" aria-label="Slide 1"></button>
+              <button aria-label="Slide 2"></button>
+              <button aria-label="Slide 3"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== Features ====== -->
+  <section id="features" class="features">
+    <div class="container">
+      <h2 class="title" style="font-size:clamp(24px,4.6vw,38px)">Why choose Fineed?</h2>
+      
+      <div class="wrapper">
+  <div class="content">
+    <p>We provide</p>
+    <ol>
+      <li>Curated Roles</li>
+      <li>1-Tap Apply</li>
+      <li>Polished Profile</li>
+      <li>Smart Alerts</li>
+    </ol>
+  </div>
+</div>
+
+      <div class="grid" style="margin-top:18px">
+        <article class="feature reveal">
+          <div class="icon" aria-hidden="true">💼</div>
+          <h4>Curated roles</h4>
+          <p class="muted">We analyze thousands of listings to bring the most relevant roles to you.</p>
+        </article>
+        <article class="feature reveal">
+          <div class="icon" aria-hidden="true">⚡</div>
+          <h4>1-tap apply</h4>
+          <p class="muted">Upload your resume once; apply to roles in seconds.</p>
+        </article>
+        <article class="feature reveal">
+          <div class="icon" aria-hidden="true">👤</div>
+          <h4>Polished profile</h4>
+          <p class="muted">Import from LinkedIn and let Fineed auto-format a beautiful profile.</p>
+        </article>
+        <article class="feature reveal">
+          <div class="icon" aria-hidden="true">🔔</div>
+          <h4>Smart alerts</h4>
+          <p class="muted">Never miss a match. Get notified when the perfect job goes live.</p>
+        </article>
+      </div>
+
+      <div class="grid" style="grid-template-columns:repeat(3,1fr); margin-top:28px">
+        <div class="card reveal" style="padding:22px; text-align:center; box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2)">
+          <div class="muted">Open positions</div>
+          <div style="font-weight:800; font-size:36px"><span class="counter" data-to="4000">0</span>+</div>
+        </div>
+        <div class="card reveal" style="box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);padding:22px; text-align:center">
+          <div class="muted">Companies</div>
+          <div style="font-weight:800; font-size:36px"><span class="counter" data-to="120">0</span>+</div>
+        </div>
+        <div class="card reveal" style="box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);padding:22px; text-align:center">
+          <div class="muted">Avg. apply time</div>
+          <div style="font-weight:800; font-size:36px"><span class="counter" data-to="28">0</span> sec</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== How it works ====== -->
+  <section id="how" class="how">
+    <div class="container">
+      <h2 class="title" style="font-size:clamp(24px,4.6vw,38px)">How it works</h2>
+      <div class="grid steps" style="margin-top:14px">
+        <article class="step reveal">
+          <span class="num">01</span>
+          <h4>Create</h4>
+          <p class="muted">Sign up with email or Google. Import your experience in a tap.</p>
+        </article>
+        <article class="step reveal">
+          <span class="num">02</span>
+          <h4>Discover</h4>
+          <p class="muted">Explore a personalized feed of roles aligned to your skills.</p>
+        </article>
+        <article class="step reveal">
+          <span class="num">03</span>
+          <h4>Apply</h4>
+          <p class="muted">Use Quick Apply to submit applications instantly from your phone.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== Testimonial ====== -->
+  <section class="testimonial">
+    <div class="container">
+      <div class="test-card reveal">
+        <div class="pfp" aria-hidden="true"></div>
+        <div>
+          <div class="stack" style="align-items:center; justify-content:space-between">
+            <div>
+              <h3 style="margin:0">David Morel</h3>
+              <p class="muted" style="margin:2px 0 0">Sr. UI/UX Designer</p>
+            </div>
+            <span class="tag" style="background:var(--primary)">Hired via Fineed</span>
+          </div>
+          <p style="margin:12px 0 0">“Fineed made my job hunt painless. The recommendations were spot‑on and I applied to 6 roles in under 5 minutes.”</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== CTA ====== -->
+  <section class="cta-wrap" id="pricing">
+    <div class="container">
+      <div class="cta-card reveal">
+        <div class="stack" style="align-items:center; justify-content:space-between; flex-wrap:wrap">
+          <div>
+            <h3 style="margin:0">Ready to get started?</h3>
+            <p class="muted" style="margin:.35rem 0 0">Join thousands who find roles faster with Fineed.</p>
+          </div>
+          <div class="stack">
+            <button class="btn primary" onclick="document.getElementById('signup').showModal()"><span class="dot"></span> Create free account</button>
+            <button class="btn">View openings</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="container">
+    <div class="stack" style="justify-content:space-between; align-items:center; flex-wrap:wrap">
+      <div class="stack" style="align-items:center">
+        <span class="logo">F</span>
+        <span class="muted">© <span id="year"></span> Fineed</span>
+      </div>
+      <div class="stack muted" style="flex-wrap:wrap">
+        <a href="#">Privacy</a>
+        <span>•</span>
+        <a href="#">Terms</a>
+        <span>•</span>
+        <a href="#">Support</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ====== Dialogs (Sign in / Up) ====== -->
+  <dialog id="signin" class="card" style="padding:0; max-width:520px">
+    <form method="dialog" style="padding:22px">
+      <h3 style="margin:0 0 6px">We Say Hello!</h3>
+      <p class="muted" style="margin:0 0 14px">Welcome back. Log in to continue.</p>
+      <div class="grid" style="grid-template-columns:1fr; gap:10px">
+        <input required placeholder="Email" type="email" class="card" style="padding:12px" />
+        <input required placeholder="Password" type="password" class="card" style="padding:12px" />
+        <button class="cta" value="default">Log in</button>
+        <button class="btn" style="justify-content:center" value="cancel">Cancel</button>
+      </div>
+      <p class="muted" style="margin-top:12px; font-size:14px">Or continue with</p>
+      <div class="stack">
+        <button class="btn" type="button"><span class="logo" style="width:24px;height:24px;background:#111;color:#fff">G</span> Google</button>
+        <button class="btn" type="button"><span class="logo" style="width:24px;height:24px;background:#111;color:#fff"></span> Apple</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="signup" class="card" style="padding:0; max-width:520px">
+    <form method="dialog" style="padding:22px">
+      <h3 style="margin:0 0 6px">We Say Hello!</h3>
+      <p class="muted" style="margin:0 0 14px">Create your account to find tailored roles.</p>
+      <div class="grid" style="grid-template-columns:1fr; gap:10px">
+        <input required placeholder="Full name" class="card" style="padding:12px" />
+        <input required placeholder="Email" type="email" class="card" style="padding:12px" />
+        <input required placeholder="Password" type="password" class="card" style="padding:12px" />
+        <button class="cta" value="default">Sign up</button>
+        <button class="btn" style="justify-content:center" value="cancel">Cancel</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script>
+    /* ====== Simple slider logic ====== */
+    const slides = Array.from(document.querySelectorAll('.slide'))
+    const dots = Array.from(document.querySelectorAll('.dots button'))
+    let i = 0, timer
+
+    function show(n){
+      slides.forEach((s, idx)=>{
+        s.classList.toggle('active', idx === n)
+      })
+      dots.forEach((d, idx)=>{
+        d.setAttribute('aria-current', idx === n ? 'true' : 'false')
+      })
+      i = n
+    }
+    function next(){ show((i+1)%slides.length) }
+    function autoplay(){ timer = setInterval(next, 4200) }
+    dots.forEach((d, idx)=> d.addEventListener('click', ()=>{ clearInterval(timer); show(idx); autoplay() }))
+    autoplay()
+
+    /* Swipe for mobile */
+    let startX = 0
+    const slidesWrap = document.getElementById('slides')
+    slidesWrap.addEventListener('touchstart', e=> startX = e.touches[0].clientX, {passive:true})
+    slidesWrap.addEventListener('touchend',   e=> {
+      const dx = e.changedTouches[0].clientX - startX
+      if(Math.abs(dx) > 40){ clearInterval(timer); dx<0? next() : show((i-1+slides.length)%slides.length); autoplay() }
+    }, {passive:true})
+
+    /* ====== Scroll reveal ====== */
+    const io = new IntersectionObserver((entries)=>{
+      for(const it of entries){ if(it.isIntersecting){ it.target.classList.add('in'); io.unobserve(it.target) } }
+    }, {threshold:.16})
+    document.querySelectorAll('.reveal').forEach(el=> io.observe(el))
+
+    /* ====== Counter up ====== */
+    const counters = document.querySelectorAll('.counter')
+    const io2 = new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if(!entry.isIntersecting) return
+        const el = entry.target
+        const to = +el.dataset.to
+        const start = performance.now()
+        const dur = 1000
+        function tick(t){
+          const k = Math.min(1, (t-start)/dur)
+          el.textContent = Math.floor(to*k).toLocaleString('en-IN')
+          if(k<1) requestAnimationFrame(tick)
+        }
+        requestAnimationFrame(tick)
+        io2.unobserve(el)
+      })
+    }, {threshold:.5})
+    counters.forEach(el=> io2.observe(el))
+
+    /* ====== Year ====== */
+    document.getElementById('year').textContent = new Date().getFullYear()
+
+    /* ====== Dialog polyfill for older browsers (very light) ====== */
+    for(const dlg of document.querySelectorAll('dialog')){
+      if(!('showModal' in dlg)){
+        dlg.showModal = ()=> dlg.setAttribute('open','')
+        dlg.close = ()=> dlg.removeAttribute('open')
+      }
+    }
+  </script>
+</body>
+</html>

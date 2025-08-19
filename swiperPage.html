@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Swiper Coverflow Animation</title>
+
+  <!-- Swiper CSS (CDN) -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/swiper@11/swiper-bundle.min.css"
+  />
+
+  <style>
+    :root{
+      --bg: #0b0d14;
+      --card-bg: #121521;
+      --accent: #6ee7ff;
+      --text: #e7ecff;
+      --muted: #9aa2b1;
+    }
+
+    *{ box-sizing: border-box; }
+
+    body{
+      margin:0;
+      min-height:100svh;
+      display:grid;
+      place-items:center;
+      background:
+        radial-gradient(1200px 800px at 85% -10%, #1a2035 0%, rgba(26,32,53,0) 60%),
+        radial-gradient(900px 600px at -10% 110%, #101426 0%, rgba(16,20,38,0) 60%),
+        var(--bg);
+      color:var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+      overflow-x:hidden;
+    }
+
+    .wrap{
+      width:min(1100px, 96vw);
+      padding: clamp(12px, 2vw, 24px);
+    }
+
+    .title{
+      text-align:center;
+      font-weight:800;
+      letter-spacing:0.4px;
+      font-size:clamp(20px, 3.4vw, 34px);
+      line-height:1.1;
+      margin:0 0 14px;
+      text-shadow: 0 0 30px rgba(110, 231, 255, 0.25);
+    }
+
+    .subtitle{
+      text-align:center;
+      color: var(--muted);
+      margin: 0 0 28px;
+      font-size: clamp(13px, 1.8vw, 16px);
+    }
+
+    /* Swiper layout */
+    .swiper{
+      width:100%;
+      padding: 40px 10px 70px; /* extra bottom for pagination */
+    }
+
+    .swiper-slide{
+      width: clamp(220px, 34vw, 360px); /* slidesPerView:'auto' */
+      aspect-ratio: 4 / 5;
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01)) , var(--card-bg);
+      box-shadow:
+        0 10px 30px rgba(0,0,0,0.35),
+        inset 0 1px 0 rgba(255,255,255,0.06);
+      overflow:hidden;
+      position:relative;
+      display:flex;
+      align-items:flex-end;
+      transform-origin: center;
+    }
+
+    /* Decorative glow behind active slide */
+    .swiper-slide::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background: radial-gradient(140% 55% at 50% 110%, rgba(110,231,255,0.22), rgba(110,231,255,0) 60%);
+      filter: blur(10px);
+      opacity:0;
+      transition: opacity .35s ease;
+      pointer-events:none;
+    }
+
+    .swiper-slide-active::before{ opacity: 1; }
+
+    /* Media image */
+    .media{
+      position:absolute; inset:0;
+      background: #0c0f1c;
+      display:block;
+    }
+
+    .media img{
+      width:100%; height:100%; object-fit:cover; display:block;
+      filter: contrast(1.02) saturate(1.02);
+      transform: scale(1.04);
+    }
+
+    /* Gradient overlay for text readability */
+    .fade{
+      position:absolute; inset:0;
+      background:
+        linear-gradient( to top, rgba(5,7,11,0.85) 0%, rgba(5,7,11,0.0) 55% );
+      pointer-events:none;
+    }
+
+    /* Card content */
+    .content{
+      position:relative;
+      width:100%;
+      padding: 18px 18px 20px;
+      z-index:2;
+    }
+
+    .tag{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      font-size:12px;
+      background: rgba(110,231,255,0.12);
+      border: 1px solid rgba(110,231,255,0.25);
+      color: #c5f6ff;
+      padding: 6px 10px;
+      border-radius: 999px;
+      backdrop-filter: blur(6px);
+      margin-bottom: 8px;
+    }
+    .tag-dot{
+      width:8px; height:8px; border-radius:50%;
+      background: var(--accent); box-shadow: 0 0 16px var(--accent);
+    }
+
+    .h{
+      font-size: clamp(16px, 2.2vw, 22px);
+      margin: 6px 0 6px;
+      line-height:1.15;
+      letter-spacing:.2px;
+      font-weight:700;
+    }
+    .p{
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* Pagination + Nav */
+    .swiper-pagination-bullets .swiper-pagination-bullet{
+      background: rgba(255,255,255,0.35);
+      opacity: 1;
+    }
+    .swiper-pagination-bullet-active{
+      background: var(--accent);
+      box-shadow: 0 0 0 6px rgba(110, 231, 255, 0.12);
+    }
+
+    .swiper-button-prev, .swiper-button-next{
+      color: var(--text);
+      width: 44px; height:44px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      backdrop-filter: blur(6px);
+    }
+    .swiper-button-prev::after, .swiper-button-next::after{
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    /* Subtle entrance animation */
+    .swiper-slide .content{
+      transform: translateY(10px);
+      opacity: .0;
+      transition: .45s ease .0s;
+    }
+    .swiper-slide-active .content{
+      transform: translateY(0);
+      opacity: 1;
+      transition-delay: .15s;
+    }
+
+    @media (max-width: 520px){
+      .swiper{ padding-inline: 2px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1 class="title">PROJECTS</h1>
+    <p class="subtitle">Drag / swipe, or use the arrows.</p>
+
+    <!-- Swiper -->
+    <div class="swiper mySwiper">
+      <div class="swiper-wrapper">
+        <!-- Slide 1 -->
+        <div class="swiper-slide">
+          <a class="media" href="./project1.html" aria-label="Slide 1">
+            <!-- Replace with your images/videos -->
+            <img src="./1stPROJ.png" alt="Neon city">
+          </a>
+          <div class="fade"></div>
+          <div class="content">
+            <div class="tag"><span class="tag-dot"></span> Job Search platform</div>
+            <h3 class="h">Fineed</h3>
+            <p class="p">Welcome to the platform where jobs are earned, not just dreamed of. Let's shape your future, together.</p>
+          </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="swiper-slide">
+          <a class="media" href="https://topshe23.github.io/to-doList/" aria-label="Slide 2">
+            <img src="./2ndProj.png" alt="Mountains">
+          </a>
+          <div class="fade"></div>
+          <div class="content">
+            <div class="tag"><span class="tag-dot"></span> To-Do list </div>
+            <h3 class="h">Task Tally</h3>
+            <p class="p">You can keep record of tasks to be done, strikethrough the completed ones and mark the no. of remaining tasks.</p>
+          </div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="swiper-slide">
+          <a class="media" href="https://topshe23.github.io/tic-tac-toe/" aria-label="Slide 3">
+            <img src="./3rdProj.png" alt="Starry sky">
+          </a>
+          <div class="fade"></div>
+          <div class="content">
+            <div class="tag"><span class="tag-dot"></span>Game</div>
+            <h3 class="h">Tic-Tac-Toe</h3>
+            <p class="p">A basic Tic-Tac-Toe game showcasing implementation of clean javascript.</p>
+          </div>
+        </div>
+
+        <!-- Slide 4 -->
+        <div class="swiper-slide">
+          <a class="media" href="https://topshe23.github.io/webdleo/" aria-label="Slide 4">
+            <img src="./4thProj.png" alt="Forest">
+          </a>
+          <div class="fade"></div>
+          <div class="content">
+            <div class="tag"><span class="tag-dot"></span> quiz Webpage</div>
+            <h3 class="h">Brain Tickler</h3>
+            <p class="p">Test your general knowledge through questions of your interest.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pagination & Controls -->
+      <div class="swiper-pagination"></div>
+      <div class="swiper-button-prev" tabindex="0" role="button" aria-label="Previous slide"></div>
+      <div class="swiper-button-next" tabindex="0" role="button" aria-label="Next slide"></div>
+    </div>
+  </div>
+
+  <!-- Swiper JS (CDN) -->
+  <script src="https://unpkg.com/swiper@11/swiper-bundle.min.js"></script>
+
+  <script>
+    // Swiper initialization
+    const swiper = new Swiper(".mySwiper", {
+      effect: "coverflow",
+      grabCursor: true,
+      centeredSlides: true,
+      slidesPerView: "auto",     // width set via CSS -> responsive cards
+      loop: true,
+
+      coverflowEffect: {
+        rotate: 18,              // tilt
+        stretch: 0,              // space between slides (px)
+        depth: 180,              // z-depth
+        modifier: 1.2,
+        slideShadows: true,
+      },
+
+      autoplay: {
+        delay: 2200,
+        disableOnInteraction: false,
+        pauseOnMouseEnter: true,
+      },
+
+      speed: 650,
+      resistanceRatio: 0.85,
+
+      pagination: {
+        el: ".swiper-pagination",
+        clickable: true,
+      },
+
+      navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+      },
+
+      // Breakpoints to slightly tighten spacing on small screens
+      breakpoints: {
+        0:   { speed: 600 },
+        480: { speed: 650 },
+        768: { speed: 700 }
+      }
+    });
+  </script>
+</body>
+</html>
